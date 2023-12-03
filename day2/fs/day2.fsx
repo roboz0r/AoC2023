@@ -2,7 +2,7 @@ open System
 open System.Collections.Immutable
 open System.IO
 
-let input = File.ReadAllLines(Path.Combine(__SOURCE_DIRECTORY__, "input.txt"))
+let input = File.ReadAllLines(Path.Combine(__SOURCE_DIRECTORY__, "..", "input.txt"))
 
 [<RequireQualifiedAccess>]
 type CubeBag = { Red: int; Green: int; Blue: int }

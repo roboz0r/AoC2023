@@ -22,7 +22,7 @@ let sumCalibrationData (s: string) =
 
 let result = sumCalibrationData sample
 
-let input = File.ReadAllText(Path.Combine(__SOURCE_DIRECTORY__, "input.txt"))
+let input = File.ReadAllText(Path.Combine(__SOURCE_DIRECTORY__, "..", "input.txt"))
 
 let result2 = sumCalibrationData input
 
