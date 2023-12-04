@@ -68,3 +68,32 @@ let dupedCardsPart2 =
 
     workingCards
     |> Array.sumBy (fun (_, count) -> count)
+
+let functionalPart2 =
+    let map =
+        cards
+        |> Array.map (fun x -> x.Id, (x, 1))
+        |> Map.ofArray
+
+    let rec incCount count i maxI (map: Map<int, (ScratchCard * int)>) =
+        if i > maxI then
+            map
+        else
+            let (y, countY) = map.[i]
+            incCount count (i + 1) maxI (Map.add i (y, countY + count) map)
+
+    let rec loop i (map: Map<int, (ScratchCard * int)>) =
+        match Map.tryFind i map with
+        | None -> map
+        | Some (x, count) ->
+            let matchingNos = ScratchCard.matchingNos x
+
+            match matchingNos with
+            | 0 -> loop (i + 1) map
+            | _ -> loop (i + 1) (incCount count (i + 1) (i + matchingNos) map)
+
+
+    let map = loop 1 map
+
+    map
+    |> Seq.sumBy (fun (KeyValue (_, (x, count))) -> count)
