@@ -169,6 +169,48 @@ module Hand2 =
         | [ _; _; _; _; ('J', 1) ] -> HandType.Pair
         | _ -> HandType.High
 
+    // Experiment with active patterns as alternative
+    let (|J|_|) =
+        function
+        | ('J', i) -> Some i
+        | _ -> None
+
+    let (|C|) (_, i) = i
+
+
+    let handType2 (cards: string) =
+        let grouped =
+            cards.ToCharArray()
+            |> Array.countBy id
+            |> Array.sortByDescending (fun (c, i) -> i * 100 + Array.IndexOf(order, c))
+            |> Array.toList
+
+        match grouped with
+        | [ C 5 ] -> HandType.Five
+        | J 4 :: _ -> HandType.Five
+
+        | C 4 :: J 1 :: _ -> HandType.Five
+        | C 4 ::  _ -> HandType.Four
+
+        | J 3 :: C 2 :: _ -> HandType.Five
+        | J 3 :: _ -> HandType.Four
+
+        | C 3 :: x -> 
+            match x with
+            | [J 2] -> HandType.Five
+            | [C 2] -> HandType.FullHouse
+            | [_; J 1] -> HandType.Four
+            | _ -> HandType.Three
+        
+        | [ C 2; J 2; _ ] -> HandType.Four
+        | [ C 2; C 2; J 1 ] -> HandType.FullHouse
+        | [ C 2; C 2; _ ] -> HandType.TwoPair
+        | [ C 2; _; _; J 1 ] -> HandType.Three
+        | J 2 :: _ -> HandType.Three
+        | C 2 :: _ -> HandType.Pair
+        | [ _; _; _; _; J 1 ] -> HandType.Pair
+        | _ -> HandType.High
+
     let compare (cards1: string) (cards2: string) =
         let handType1 = handType cards1
         let handType2 = handType cards2
